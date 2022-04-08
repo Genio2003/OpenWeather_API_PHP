@@ -1,8 +1,8 @@
 <?php
 
 /* Settings */
-$API_Key="<API_KEY>";
-$City_ID=3169070;
+$API_Key="4ee4a2a336a3c7c485baa1c06d78a931";
+$City_ID=3176203;
 $Units="metric";
 
 function CallAPI($method, $url, $data = false)
@@ -25,6 +25,7 @@ function CallAPI($method, $url, $data = false)
                 $url = sprintf("%s?%s", $url, http_build_query($data));
     }
 
+    // Optional Authentication:
     curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_setopt($curl, CURLOPT_USERPWD, "username:password");
 
@@ -58,11 +59,11 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
 
     </head>
 
-    <body>
+    <body onload="Auto_Dark_Mode()">
 
-        <img src="Icons/<?php echo ($Response['weather'][0]['icon']) ?>.svg">
+        <img id="Icon" src="Icons/<?php echo ($Response['weather'][0]['icon']) ?>.svg">
         <p><?php echo ($Response['weather'][0]['main']) ?></p>
-        <table>
+        <table id="Table1">
             <tr>
                 <td colspan="2" style="font-weight: bold">Temperature</td>
             </tr>
@@ -75,13 +76,13 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
                 <td>Min: <?php echo ($Response['main']['temp_min']) ?>°C</td>
             </tr>
         </table>
-        <table style="margin-top: 15px">
+        <table id="Table2" style="margin-top: 15px">
             <tr>
                 <td><b>Pressure:</b> <?php echo ($Response['main']['pressure']) ?>hPa</td>
                 <td><b>Humidity:</b> <?php echo ($Response['main']['humidity']) ?>%</td>
             </tr>
         </table>
-        <table style="margin-top: 15px;">
+        <table id="Table3" style="margin-top: 15px;">
             <tr>
                 <td colspan="2" style="font-weight: bold">Wind</td>
             </tr>
@@ -90,7 +91,7 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
                 <td>Deg: <?php echo ($Response['wind']['deg']) ?>°</td>
             </tr>
         </table>
-        <table style="margin-top: 15px; margin-bottom: 25px;">
+        <table id="Table4" style="margin-top: 15px; margin-bottom: 25px;">
             <tr>
                 <td colspan="2" style="font-weight: bold">Time</td>
             </tr>
@@ -100,11 +101,48 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
             </tr>
         </table>
 
-        <?php echo ($Response['name'])." ".($Response['sys']['country'])." - ".($Response['id']) ?>
+        <?php echo ($Response['name'])." ".($Response['sys']['country'])." - ".($Response['id']) ?><br>
+
+        <button id="Dark_Theme_Switch" onclick="Dark_Mode()">Dark-Mode</button>
 
     </body>
 
 </html>
+
+<script>
+
+    // Dark_Mode //
+	
+	function Auto_Dark_Mode()
+	{
+		var Time = new Date().getHours();
+		if (Time >= 19 || Time < 7) {
+            Dark_Mode();
+        }
+	}
+
+    function Dark_Mode()
+	{
+		document.body.classList.toggle("dark-theme");
+		if (document.body.className == 'dark-theme') {
+			document.getElementById("Icon").style.filter = "invert(100%) sepia(2%) saturate(161%) hue-rotate(202deg) brightness(112%) contrast(87%)";
+
+            //document.getElementById("Table1").style = "border: 2px solid #808080";
+            //document.getElementById("Table2").style = "border: 2px solid #808080; margin-top: 15px;";
+            //document.getElementById("Table3").style = "border: 2px solid #808080; margin-top: 15px;";
+            //document.getElementById("Table4").style = "border: 2px solid #808080; margin-top: 15px; margin-bottom: 25px;"
+		}
+		else {
+			document.getElementById("Icon").style.filter = "none";
+
+            //document.getElementById("Table1").style = "border: 2px solid #808080";
+            //document.getElementById("Table2").style = "border: 2px solid #808080; margin-top: 15px;";
+            //document.getElementById("Table3").style = "border: 2px solid #808080; margin-top: 15px;";
+            //document.getElementById("Table4").style = "border: 2px solid #808080; margin-top: 15px; margin-bottom: 25px;"
+		}
+	}
+
+</script>
 
 <style>
 
@@ -130,7 +168,13 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
         place-content: center;
     }
 
+    body.dark-theme {
+		color: #eee;
+    	background: #121212;
+	}
+
     img {
+        margin-top: 20px;
         height: 250px;
         width: auto;
     }
@@ -141,7 +185,7 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
     }
 
     table {
-        border: 2px solid black;
+        border: 2px solid #808080;
         border-collapse: collapse;
         align: center;
         margin-right: auto;
@@ -149,9 +193,14 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
     }
 
     td {
-        border: 1px solid black;
+        border: 1px solid #808080;
         text-align: center;
         padding: 8px;
+    }
+
+    button {
+        margin-top: 10px;
+        margin-bottom: 15px;
     }
 
 </style>
