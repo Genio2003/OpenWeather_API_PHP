@@ -60,7 +60,7 @@ $Response=json_decode(CallAPI("GET","https://api.openweathermap.org/data/2.5/wea
 
     <body>
 
-        <img src="https://raw.githubusercontent.com/isneezy/open-weather-icons/master/src/svg/<?php echo ($Response['weather'][0]['icon']) ?>.svg">
+        <img src="Icons/<?php echo ($Response['weather'][0]['icon']) ?>.svg">
         <p><?php echo ($Response['weather'][0]['main']) ?></p>
         <table>
             <tr>
